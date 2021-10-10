@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view"
+    >
+    <item android:title="Ciudad Universitaria">
+
+        <menu>
+
+            <item
+                android:id="@+id/campusCU"
+                android:title="Ciudad Universitaria"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_baseline_location_city_24"/>
+            <item
+                android:id="@+id/policiaSN"
+                android:title="Policía de San Nicolás"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_baseline_local_police_24"/>
+
+            <item
+                android:id="@+id/bomberosSN"
+                android:title="Bomberos de San Nicolás"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_baseline_local_fire_department_24"/>
+
+        </menu>
+
+    </item>
+
+
+</menu>
