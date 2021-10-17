@@ -211,6 +211,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         when(item.itemId){
             R.id.campusCU -> zoomCU()
+            R.id.campusMedi -> zoomMedi()
+            R.id.campusMed -> zoomMed()
             R.id.policiaSN -> permisosPoliciaSN()
             R.id.bomberosSN -> permisosBomberosSN()
         }
@@ -259,6 +261,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             null
         )
         Toast.makeText(this, "Mostrando campus de Ciudad Universitaria",
+            Toast.LENGTH_SHORT).show()
+    }
+
+    fun zoomMedi(){
+        val medi = LatLng(25.689196, -100.347982)
+        map.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(medi, 16f),
+            2000,
+            null
+        )
+        Toast.makeText(this, "Mostrando campus de Medicina",
+            Toast.LENGTH_SHORT).show()
+    }
+
+    fun zoomMed(){
+        val med = LatLng(25.613107, -100.279229)
+        map.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(med, 16f),
+            2000,
+            null
+        )
+        Toast.makeText(this, "Mostrando campus de Mederos",
             Toast.LENGTH_SHORT).show()
     }
 }

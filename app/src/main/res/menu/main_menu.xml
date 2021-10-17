@@ -29,5 +29,55 @@
 
     </item>
 
+    <item android:title="Campus de Medicina">
+
+        <menu>
+
+            <item
+                android:id="@+id/campusMedi"
+                android:title="Campus de Medicina"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_baseline_local_hospital_24"/>
+            <item
+                android:id="@+id/policiaMedi"
+                android:title="Policía de Monterrey"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_baseline_local_police_24"/>
+
+            <item
+                android:id="@+id/bomberosMedi"
+                android:title="Bomberos de Monterrey"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_baseline_local_fire_department_24"/>
+
+        </menu>
+
+    </item>
+
+    <item android:title="Campus Mederos">
+
+        <menu>
+
+            <item
+                android:id="@+id/campusMed"
+                android:title="Campus de Mederos"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_baseline_mic_24"/>
+            <item
+                android:id="@+id/policiaMed"
+                android:title="Policía de Monterrey"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_baseline_local_police_24"/>
+
+            <item
+                android:id="@+id/bomberosMed"
+                android:title="Bomberos de Monterrey"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_baseline_local_fire_department_24"/>
+
+        </menu>
+
+    </item>
+
 
 </menu>
