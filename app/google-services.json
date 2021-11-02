@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "109146261976",
+    "project_id": "alerta-uanl",
+    "storage_bucket": "alerta-uanl.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109146261976:android:6d2c56fe5f7350ea498aad",
+        "android_client_info": {
+          "package_name": "com.example.alertauanl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "109146261976-r2c501j25vckme833k4s8nlubh0prh31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZ2KyxmR7rU-jqh4_aYEtaXOL9ohKDvZk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "109146261976-r2c501j25vckme833k4s8nlubh0prh31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
