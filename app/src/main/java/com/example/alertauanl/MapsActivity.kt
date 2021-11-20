@@ -7,6 +7,7 @@ import android.location.Location
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -20,15 +21,28 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.alertauanl.databinding.ActivityMapsBinding
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.firebase.firestore.FirebaseFirestore
 
+//numeros telefonicos
+private const val POLICIA_SANICO = "tel:5555555555"
+private const val BOMBEROS_SANICO = "tel:6666666666"
+private const val POLICIA_MONTERREY = "tel:7777777777"
+private const val BOMBEROS_MONTERREY = "tel:8888888888"
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
 
-    private lateinit var map: GoogleMap
-    companion object{
+    private lateinit var map: GoogleMap //mapa
+
+    companion object{ //companion object para la peticion de la localizacion
         const val REQUEST_CODE_LOCATION = 0
     }
+
     private lateinit var binding: ActivityMapsBinding
+
+    var db = FirebaseFirestore.getInstance() //instancia de la base de datos
+    var TAG = "MapsActivity"
+    var arMarcadores = arrayListOf<marcadores>() //array para los datos
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,105 +59,63 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
     override fun onMapReady(googleMap: GoogleMap) { //cargar el mapa
         map = googleMap
-        createMarker()
+        zoomCU()
+        createMarkerCampus()
+        createMarkerMedicina()
+        createMarkerMederos()
         map.setOnMyLocationButtonClickListener(this)
         map.setOnMyLocationClickListener(this)
         enableLocation()
     }
 
-    private fun createMarker(){ //crear marcadores
-        val fime = LatLng(25.72492236727511, -100.3134397035457)
-        val mFime = MarkerOptions().position(fime).title("Poste de emergencia FIME")
-            .snippet("Frente a FIME en intersección con FIC")
-        val caseta1 = LatLng(25.725825, -100.316610)
-        val mCaseta1 = MarkerOptions().position(caseta1).title("Caseta de prevención y protección")
-            .snippet("Entre el gimnasio de FCQ y FCFM")
-        val emergencia = LatLng(25.727991, -100.315296)
-        val mEmergencia = MarkerOptions().position(emergencia).title("Poste de emergencia")
-            .snippet("Dentro de la cancha de futbol")
-        val emergencia1 = LatLng(25.728475, -100.313325)
-        val mEmergencia1 = MarkerOptions().position(emergencia1)
-            .title("Poste de emergencia Gaspar Mas")
-            .snippet("Frente al estadio Gaspar Mas")
-        val fod = LatLng(25.726998, -100.312563)
-        val mFod = MarkerOptions().position(fod)
-            .title("Poste de emergencia FOD")
-            .snippet("Entre las canchas de FIME y FOD")
-        val ffyl = LatLng(25.727063, -100.309782)
-        val mFfyl= MarkerOptions().position(ffyl)
-            .title("Poste de emergencia FFYL")
-            .snippet("Frente a FFYL en intersección con FACPYA")
-        val facpya = LatLng(25.727752, -100.307808)
-        val mFacpya= MarkerOptions().position(facpya)
-            .title("Poste de emergencia FACPYA")
-            .snippet("Frente a FACPYA, detrás de Av. Universidad")
-        val emergencia2 = LatLng(25.726848, -100.308423)
-        val mEmergencia2= MarkerOptions().position(emergencia2)
-            .title("Poste de emergencia")
-            .snippet("En el cruce para estudiantes frente a FACPYA")
-        val rectoria = LatLng(25.724859, -100.311028)
-        val mRectoria= MarkerOptions().position(rectoria)
-            .title("Poste de emergencia Rectoria")
-            .snippet("Entre el departamento de becas y Banorte")
-        val farq = LatLng(25.725129, -100.311358)
-        val mFarq= MarkerOptions().position(farq)
-            .title("Poste de emergencia FARQ")
-            .snippet("Detras de FARQ, entre el departamento de Escolar")
-        val lUniversitaria = LatLng(25.723640, -100.310848)
-        val mLibreria= MarkerOptions().position(lUniversitaria)
-            .title("Poste de emergencia Libreria Universitaria")
-            .snippet("Frente a la Libreria Univesitaria")
-        val eEstacionamiento = LatLng(25.723445, -100.309883)
-        val mEmergenciaEstacionamiento= MarkerOptions().position(eEstacionamiento)
-            .title("Poste de emergencia Estacionamiento")
-            .snippet("Junto al estacionamiento del Estadio Universitario")
-        val fcfm = LatLng(25.725933, -100.314806)
-        val mFcfm= MarkerOptions().position(fcfm)
-            .title("Poste de emergencia FCFM")
-            .snippet("Frente a FCFM a la izquierda de FIME")
-        val fcb = LatLng(25.723769, -100.316248)
-        val mFcb= MarkerOptions().position(fcb)
-            .title("Poste de emergencia FCB")
-            .snippet("Entre FCB y el estacionamiento de Ciudad Universitaria")
-        val pVigilancia = LatLng(25.722995, -100.315289)
-        val mVigilancia= MarkerOptions().position(pVigilancia)
-            .title("Punto de Vigilancia")
-            .snippet("Dentro del estacionamiento del Estadio Universitario")
-        val fic = LatLng(25.723803, -100.313402)
-        val mFic= MarkerOptions().position(fic)
-            .title("Poste de emergencia FIC")
-            .snippet("Entre FIC y el Estadio Universitario")
-        val eu = LatLng(25.724489, -100.309180)
-        val mEu= MarkerOptions().position(eu)
-            .title("Poste de emergencia Estadio Universitario")
-            .snippet("A la salida del metro Universidad a lado de Rectoria")
-        val caseta2 = LatLng(25.723693, -100.309062)
-        val mCaseta2= MarkerOptions().position(caseta2)
-            .title("Caseta de prevención y protección")
-            .snippet("En la entrada de Ciudad Universitaria")
-        map.addMarker(mFime)
-        map.addMarker(mCaseta1)
-        map.addMarker(mEmergencia)
-        map.addMarker(mEmergencia1)
-        map.addMarker(mFod)
-        map.addMarker(mFfyl)
-        map.addMarker(mFacpya)
-        map.addMarker(mEmergencia2)
-        map.addMarker(mRectoria)
-        map.addMarker(mFarq)
-        map.addMarker(mLibreria)
-        map.addMarker(mEmergenciaEstacionamiento)
-        map.addMarker(mFcfm)
-        map.addMarker(mFcb)
-        map.addMarker(mVigilancia)
-        map.addMarker(mFic)
-        map.addMarker(mEu)
-        map.addMarker(mCaseta2)
-        map.animateCamera(
-            CameraUpdateFactory.newLatLngZoom(fime, 16f),
-            2000,
-            null
-        )
+    fun createMarkerCampus(){ //crear marcadores de ciudad universitaria a partir de la  base de datos
+        db.collection("campus").addSnapshotListener{ result, e ->
+            if(e!=null){
+                Log.w(TAG, "Listen failed", e)
+                return@addSnapshotListener
+            }
+            arMarcadores.clear()
+            arMarcadores.addAll(result!!.toObjects(marcadores::class.java))
+            for(localizacion in arMarcadores){
+                val geoPosition = LatLng(localizacion.latitud, localizacion.longitud)
+                map.addMarker(MarkerOptions().position(geoPosition).title(localizacion.titulo)
+                    .snippet(localizacion.comentario))
+            }
+        }
+    }
+
+    fun createMarkerMedicina(){ //crear marcadores de campus de medicina a partir de la  base de datos
+        db.collection("medicina").addSnapshotListener{ result, e ->
+            if(e!=null){
+                Log.w(TAG, "Listen failed", e)
+                return@addSnapshotListener
+            }
+            arMarcadores.clear()
+            arMarcadores.addAll(result!!.toObjects(marcadores::class.java))
+            for(localizacion in arMarcadores){
+                val geoPosition = LatLng(localizacion.latitud, localizacion.longitud)
+                map.addMarker(MarkerOptions().position(geoPosition).title(localizacion.titulo)
+                    .snippet(localizacion.comentario)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
+            }
+        }
+    }
+
+    fun createMarkerMederos(){ //crear marcadores de campus de mederos a partir de la  base de datos
+        db.collection("mederos").addSnapshotListener{ result, e ->
+            if(e!=null){
+                Log.w(TAG, "Listen failed", e)
+                return@addSnapshotListener
+            }
+            arMarcadores.clear()
+            arMarcadores.addAll(result!!.toObjects(marcadores::class.java))
+            for(localizacion in arMarcadores){
+                val geoPosition = LatLng(localizacion.latitud, localizacion.longitud)
+                map.addMarker(MarkerOptions().position(geoPosition).title(localizacion.titulo)
+                    .snippet(localizacion.comentario)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)))
+            }
+        }
     }
 
     private fun isLocationPermissionGranted() = //revisar si esta permitida la ubicacion
@@ -170,14 +142,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         }
     }
 
-    override fun onRequestPermissionsResult(
+    override fun onRequestPermissionsResult(//Comprueba los permisos pero marca error por un bug de android studio
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         when(requestCode){
             REQUEST_CODE_LOCATION -> if(grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED){
-                map.isMyLocationEnabled = true
+                map.isMyLocationEnabled = true //bug
             }else{
                 Toast.makeText(this, "Para activar la localización ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
             }else->{}
@@ -188,7 +160,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         super.onResumeFragments()
         if(!::map.isInitialized) return
         if(!isLocationPermissionGranted()){
-            map.isMyLocationEnabled = false
+            map.isMyLocationEnabled = false //bug
             Toast.makeText(this, "Para activar la localización ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
         }
     }
@@ -207,7 +179,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean { //menu de opciones
 
         when(item.itemId){
             R.id.campusCU -> zoomCU()
@@ -215,12 +187,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             R.id.campusMed -> zoomMed()
             R.id.policiaSN -> permisosPoliciaSN()
             R.id.bomberosSN -> permisosBomberosSN()
+            R.id.policiaMedi -> permisosPoliciaMON()
+            R.id.bomberosMedi -> permisosBomberosMON()
+            R.id.policiaMed -> permisosPoliciaMON()
+            R.id.bomberosMed -> permisosBomberosMON()
         }
         return super.onOptionsItemSelected(item)
     }
 
-    fun permisosPoliciaSN() {
-        val intent1 = Intent(Intent.ACTION_CALL, Uri.parse("tel:5555555555"))
+    fun permisosPoliciaSN() { //verificar permiso para llamadas y llamar a la policia
+        val intent1 = Intent(Intent.ACTION_CALL, Uri.parse(POLICIA_SANICO))
         val permission = ContextCompat.checkSelfPermission(this,
             Manifest.permission.CALL_PHONE)
 
@@ -236,8 +212,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         }
     }
 
-    fun permisosBomberosSN() {
-        val intent1 = Intent(Intent.ACTION_CALL, Uri.parse("tel:6666666666"))
+    fun permisosBomberosSN() {//verificar permiso para llamadas y llamar a los bomberos
+        val intent1 = Intent(Intent.ACTION_CALL, Uri.parse(BOMBEROS_SANICO))
         val permission = ContextCompat.checkSelfPermission(this,
             Manifest.permission.CALL_PHONE)
 
@@ -253,7 +229,41 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         }
     }
 
-    fun zoomCU(){
+    fun permisosPoliciaMON() {//verificar permiso para llamadas y llamar a la policia
+        val intent1 = Intent(Intent.ACTION_CALL, Uri.parse(POLICIA_MONTERREY))
+        val permission = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.CALL_PHONE)
+
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            val miIntent = intent1
+            startActivity(miIntent)
+        }
+        else{
+            Toast.makeText(this, "No hay permiso para llamada", Toast.LENGTH_SHORT).
+            show()
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CALL_PHONE),
+                123)
+        }
+    }
+
+    fun permisosBomberosMON() {//verificar permiso para llamadas y llamar a los bomberos
+        val intent1 = Intent(Intent.ACTION_CALL, Uri.parse(BOMBEROS_MONTERREY))
+        val permission = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.CALL_PHONE)
+
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            val miIntent = intent1
+            startActivity(miIntent)
+        }
+        else{
+            Toast.makeText(this, "No hay permiso para llamada", Toast.LENGTH_SHORT).
+            show()
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CALL_PHONE),
+                123)
+        }
+    }
+
+    fun zoomCU(){//zoom a ciudad universitaria
         val fime = LatLng(25.72492236727511, -100.3134397035457)
         map.animateCamera(
             CameraUpdateFactory.newLatLngZoom(fime, 16f),
@@ -264,7 +274,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             Toast.LENGTH_SHORT).show()
     }
 
-    fun zoomMedi(){
+    fun zoomMedi(){//zoom al campus de medicina
         val medi = LatLng(25.689196, -100.347982)
         map.animateCamera(
             CameraUpdateFactory.newLatLngZoom(medi, 16f),
@@ -275,7 +285,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             Toast.LENGTH_SHORT).show()
     }
 
-    fun zoomMed(){
+    fun zoomMed(){//zoom al campus de mederos
         val med = LatLng(25.613107, -100.279229)
         map.animateCamera(
             CameraUpdateFactory.newLatLngZoom(med, 16f),
